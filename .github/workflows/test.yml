@@ -1,0 +1,21 @@
+name: Tests
+    
+on: [push]
+
+jobs:
+  test:
+    name: Test Run
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - uses: docker://php:latest
+    - name: composer install
+      run: |
+        curl -sS https://getcomposer.org/installer | php
+        php composer.phar install
+    - name: env setup, test
+      run: |
+        cp .env.example .env
+        php artisan key:generate
+        php vendor/bin/phpunit
